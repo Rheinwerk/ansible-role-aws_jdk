@@ -3,4 +3,4 @@
   become: yes
   connection: local
   roles:
-    - ansible-role-zulu_jdk
+    - ansible-role-aws_jdk

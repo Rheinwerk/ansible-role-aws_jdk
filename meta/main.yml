@@ -1,6 +1,6 @@
 galaxy_info:
-  author: Daniel Schneller
-  description: Installs an Azual Zulu JDK on Ubuntu
+  author: Jonathan Koch
+  description: Installs an AWS Corretto JDK on Ubuntu
   company: Rheinwerk
   license: license (GPLv3)
   min_ansible_version: 2.7
@@ -11,6 +11,6 @@ galaxy_info:
   galaxy_tags:
     - java
     - jdk
-    - azul
-    - zulu
+    - aws
+    - corretto
 dependencies: []

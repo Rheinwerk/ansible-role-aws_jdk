@@ -1,13 +1,13 @@
 ---
-# defaults file for ansible-role-zulu_jdk
+# defaults file for ansible-role-aws_jdk
 
 # NONE
-_zulu_jdk:
+_aws_jdk:
   apt_repo:
-    repo_line: "deb http://repos.azulsystems.com/ubuntu stable main"
-    key_id: "0xB1998361219BD9C9"
-  package_name: "zulu-8"
-  install_dir: "/usr/lib/jvm/zulu-8-amd64"
+    repo_line: "deb https://apt.corretto.aws stable main"
+    key_id: "0xA122542AB04F24E3"
+  package_name: "java-11-amazon-corretto-jdk"
+  install_dir: "/usr/lib/jvm/java-11-amazon-corretto"
   security:
     #
     # The Java-level namelookup cache policy for successful lookups:
