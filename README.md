@@ -3,7 +3,7 @@ AWS Corretto JDK
 
 This role downloads and installs an Aws Corretto JDK and sets it up as the default JDK on Ubuntu. The .deb files come from [AWS](https://docs.aws.amazon.com/corretto/).
 
-[![Build Status](https://travis-ci.org/Rheinwerk/ansible-role-aws_jdk.svg?branch=master)](https://travis-ci.org/Rheinwerk/ansible-role-aws_jdk)
+[![Build Status](https://github.com/Rheinwerk/ansible-role-aws_jdk/actions/workflows/ci.yml/badge.svg)](https://github.com/Rheinwerk/ansible-role-aws_jdk/actions/workflows/ci.yml)
 
 Requirements
 ------------
