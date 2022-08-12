@@ -11,11 +11,19 @@
     repo: "{{ _aws_jdk.apt_repo.repo_line }}"
     state: present
 
-- name: Install Aws JDK
+- name: Install latest Aws JDK version
   apt:
     state: latest
     name: "{{ _aws_jdk.package_name }}"
     update_cache: yes
+  when: not _aws_jdk.package_name is search('=')
+
+- name: Install specific Aws JDK version
+  apt:
+    state: present
+    name: "{{ _aws_jdk.package_name }}"
+    update_cache: yes
+  when: _aws_jdk.package_name is search('=')
 
 - name: "Set security setting for DNS cache ttl"
   lineinfile:
