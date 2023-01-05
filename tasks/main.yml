@@ -3,7 +3,7 @@
 - name: Add Repository Key by ID
   apt_key:
     id: "{{ _aws_jdk.apt_repo.key_id }}"
-    keyserver: "{{ _aws_jdk.apt_repo.key_server | default('keyserver.ubuntu.com')  }}"
+    keyserver: "{{ _aws_jdk.apt_repo.key_server | default('keyserver.ubuntu.com') }}"
     state: present
 
 - name: Add Repository URL
@@ -11,7 +11,7 @@
     repo: "{{ _aws_jdk.apt_repo.repo_line }}"
     state: present
 
-- name: Install latest Aws JDK version
+- name: Install latest Aws JDK version # noqa package-latest
   apt:
     state: latest
     name: "{{ _aws_jdk.package_name }}"
@@ -27,12 +27,12 @@
 
 - name: "Set security setting for DNS cache ttl"
   lineinfile:
-    path: "{{ _aws_jdk.install_dir }}/conf/security/java.security"
+    path: "{{ _aws_jdk.install_dir }}/conf/security/java.security"
     regexp: '^(.*)networkaddress.cache.ttl=(.*)$'
     line: "networkaddress.cache.ttl={{ _aws_jdk.security.dns_cache_ttl }}"
 
 - name: "Set security setting for DNS cache negative ttl"
   lineinfile:
-    path: "{{ _aws_jdk.install_dir }}/conf/security/java.security"
+    path: "{{ _aws_jdk.install_dir }}/conf/security/java.security"
     regexp: '^(.*)networkaddress.cache.negative.ttl=(.*)$'
     line: "networkaddress.cache.negative.ttl={{ _aws_jdk.security.dns_cache_negative_ttl }}"
