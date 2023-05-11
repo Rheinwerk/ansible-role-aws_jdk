@@ -1,38 +1,38 @@
 ---
 
 - name: Add Repository Key by ID
-  apt_key:
+  ansible.builtin.apt_key:
     id: "{{ _aws_jdk.apt_repo.key_id }}"
     keyserver: "{{ _aws_jdk.apt_repo.key_server | default('keyserver.ubuntu.com') }}"
     state: present
 
 - name: Add Repository URL
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "{{ _aws_jdk.apt_repo.repo_line }}"
     state: present
 
 - name: Install latest Aws JDK version # noqa package-latest
-  apt:
+  ansible.builtin.apt:
     state: latest
     name: "{{ _aws_jdk.package_name }}"
     update_cache: yes
   when: not _aws_jdk.package_name is search('=')
 
 - name: Install specific Aws JDK version
-  apt:
+  ansible.builtin.apt:
     state: present
     name: "{{ _aws_jdk.package_name }}"
     update_cache: yes
   when: _aws_jdk.package_name is search('=')
 
 - name: "Set security setting for DNS cache ttl"
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ _aws_jdk.install_dir }}/conf/security/java.security"
     regexp: '^(.*)networkaddress.cache.ttl=(.*)$'
     line: "networkaddress.cache.ttl={{ _aws_jdk.security.dns_cache_ttl }}"
 
 - name: "Set security setting for DNS cache negative ttl"
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ _aws_jdk.install_dir }}/conf/security/java.security"
     regexp: '^(.*)networkaddress.cache.negative.ttl=(.*)$'
     line: "networkaddress.cache.negative.ttl={{ _aws_jdk.security.dns_cache_negative_ttl }}"
