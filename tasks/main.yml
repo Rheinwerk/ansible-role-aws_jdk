@@ -1,15 +1,13 @@
 ---
-
-- name: Add Repository Key by ID
-  ansible.builtin.apt_key:
-    id: "{{ _aws_jdk.apt_repo.key_id }}"
-    keyserver: "{{ _aws_jdk.apt_repo.key_server | default('keyserver.ubuntu.com') }}"
-    state: present
-
-- name: Add Repository URL
-  ansible.builtin.apt_repository:
-    repo: "{{ _aws_jdk.apt_repo.repo_line }}"
-    state: present
+- name: Add corretto Deb822 Repo
+  ansible.builtin.deb822_repository:
+    name: "{{ item.name }}"
+    types: deb
+    uris: "{{ item.uris }}"
+    suites: "{{ item.suites }}"
+    components: "{{ item.components }}"
+    signed_by: "{{ item.signed_by }}"
+  loop: "{{ _aws_jdk.deb822_repository | default([]) }}"
 
 - name: Install latest Aws JDK version # noqa package-latest
   ansible.builtin.apt:
