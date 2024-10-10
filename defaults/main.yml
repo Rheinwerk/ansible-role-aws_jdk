@@ -3,9 +3,13 @@
 
 # NONE
 _aws_jdk:
-  apt_repo:
-    repo_line: "deb https://apt.corretto.aws stable main"
-    key_id: "0xA122542AB04F24E3"
+  deb822_repository:
+    - name: corretto
+      types: deb
+      uris: https://apt.corretto.aws
+      suites: stable
+      components: main
+      signed_by: https://apt.corretto.aws/corretto.key
   package_name: "java-11-amazon-corretto-jdk"
   install_dir: "/usr/lib/jvm/java-11-amazon-corretto"
   security:
