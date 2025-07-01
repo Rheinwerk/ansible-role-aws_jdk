@@ -23,14 +23,28 @@
     update_cache: yes
   when: _aws_jdk.package_name is search('=')
 
+- name: Find Corretto Java SDK directory
+  ansible.builtin.find:
+    paths: /usr/lib/jvm
+    file_type: directory
+    patterns:
+      - '*corretto*'
+    depth: 1
+  register: corretto_dirs
+
+- name: Set DEFAULT_JAVA_HOME to Corretto directory
+  ansible.builtin.set_fact:
+    DEFAULT_JAVA_HOME: "{{ corretto_dirs.files[0].path }}"
+  when: corretto_dirs.matched > 0
+
 - name: "Set security setting for DNS cache ttl"
   ansible.builtin.lineinfile:
-    path: "{{ _aws_jdk.install_dir }}/conf/security/java.security"
+    path: "{{ DEFAULT_JAVA_HOME }}/conf/security/java.security"
     regexp: '^(.*)networkaddress.cache.ttl=(.*)$'
     line: "networkaddress.cache.ttl={{ _aws_jdk.security.dns_cache_ttl }}"
 
 - name: "Set security setting for DNS cache negative ttl"
   ansible.builtin.lineinfile:
-    path: "{{ _aws_jdk.install_dir }}/conf/security/java.security"
+    path: "{{ DEFAULT_JAVA_HOME }}/conf/security/java.security"
     regexp: '^(.*)networkaddress.cache.negative.ttl=(.*)$'
     line: "networkaddress.cache.negative.ttl={{ _aws_jdk.security.dns_cache_negative_ttl }}"

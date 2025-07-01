@@ -11,7 +11,6 @@ _aws_jdk:
       components: main
       signed_by: https://apt.corretto.aws/corretto.key
   package_name: "java-11-amazon-corretto-jdk"
-  install_dir: "/usr/lib/jvm/java-11-amazon-corretto"
   security:
     #
     # The Java-level namelookup cache policy for successful lookups:
