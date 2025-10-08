@@ -1,6 +1,0 @@
----
-- hosts: localhost
-  become: yes
-  connection: local
-  roles:
-    - ansible-role-aws_jdk
