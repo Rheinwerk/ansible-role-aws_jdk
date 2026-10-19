@@ -1,0 +1,6 @@
+---
+# dns_cache_ttl 31 is a marker proving that the role honours _aws_jdk_security; the default
+# values themselves are checked by the equivalence script in the infrastructure repository.
+_aws_jdk_security:
+  dns_cache_ttl: 31
+  dns_cache_negative_ttl: 0

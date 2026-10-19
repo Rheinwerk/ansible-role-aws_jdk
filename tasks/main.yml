@@ -7,21 +7,21 @@
     suites: "{{ item.suites }}"
     components: "{{ item.components }}"
     signed_by: "{{ item.signed_by }}"
-  loop: "{{ _aws_jdk.deb822_repository | default([]) }}"
+  loop: "{{ _aws_jdk_deb822_repository }}"
 
 - name: Install latest Aws JDK version # noqa package-latest
   ansible.builtin.apt:
     state: latest
-    name: "{{ _aws_jdk.package_name }}"
+    name: "{{ _aws_jdk_package_name }}"
     update_cache: yes
-  when: not _aws_jdk.package_name is search('=')
+  when: not _aws_jdk_package_name is search('=')
 
 - name: Install specific Aws JDK version
   ansible.builtin.apt:
     state: present
-    name: "{{ _aws_jdk.package_name }}"
+    name: "{{ _aws_jdk_package_name }}"
     update_cache: yes
-  when: _aws_jdk.package_name is search('=')
+  when: _aws_jdk_package_name is search('=')
 
 - name: Find Corretto Java SDK directories
   ansible.builtin.find:
@@ -36,7 +36,7 @@
   ansible.builtin.lineinfile:
     path: "{{ item.path }}/conf/security/java.security"
     regexp: '^(.*)networkaddress.cache.ttl=(.*)$'
-    line: "networkaddress.cache.ttl={{ _aws_jdk.security.dns_cache_ttl }}"
+    line: "networkaddress.cache.ttl={{ _aws_jdk_security.dns_cache_ttl }}"
   loop: "{{ corretto_dirs.files }}"
   when: corretto_dirs.matched > 0
 
@@ -44,6 +44,6 @@
   ansible.builtin.lineinfile:
     path: "{{ item.path }}/conf/security/java.security"
     regexp: '^(.*)networkaddress.cache.negative.ttl=(.*)$'
-    line: "networkaddress.cache.negative.ttl={{ _aws_jdk.security.dns_cache_negative_ttl }}"
+    line: "networkaddress.cache.negative.ttl={{ _aws_jdk_security.dns_cache_negative_ttl }}"
   loop: "{{ corretto_dirs.files }}"
   when: corretto_dirs.matched > 0

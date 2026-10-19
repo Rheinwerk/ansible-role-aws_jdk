@@ -1,43 +1,46 @@
 ---
 # defaults file for ansible-role-aws_jdk
 
-# NONE
-_aws_jdk:
-  deb822_repository:
-    - name: corretto
-      types: deb
-      uris: https://apt.corretto.aws
-      suites: stable
-      components: main
-      signed_by: https://apt.corretto.aws/corretto.key
-  package_name: "java-21-amazon-corretto-jdk"
-  security:
-    #
-    # The Java-level namelookup cache policy for successful lookups:
-    #
-    # any negative value: caching forever
-    # any positive value: the number of seconds to cache an address for
-    # zero: do not cache
-    #
-    # default value is forever (FOREVER). For security reasons, this
-    # caching is made forever when a security manager is set. When a security
-    # manager is not set, the default behavior in this implementation
-    # is to cache for 30 seconds.
-    #
-    # NOTE: setting this to anything other than the default value can have
-    #       serious security implications. Do not set it unless
-    #       you are sure you are not exposed to DNS spoofing attack.
-    #
-    dns_cache_ttl: 30
-    # The Java-level namelookup cache policy for failed lookups:
-    #
-    # any negative value: cache forever
-    # any positive value: the number of seconds to cache negative lookup results
-    # zero: do not cache
-    #
-    # In some Microsoft Windows networking environments that employ
-    # the WINS name service in addition to DNS, name service lookups
-    # that fail may take a noticeably long time to return (approx. 5 seconds).
-    # For this reason the default caching policy is to maintain these
-    # results for 10 seconds.
-    dns_cache_negative_ttl: 10
+# Corretto apt repository (deb822)
+_aws_jdk_deb822_repository:
+  - name: corretto
+    types: deb
+    uris: https://apt.corretto.aws
+    suites: stable
+    components: main
+    signed_by: https://apt.corretto.aws/corretto.key
+
+# Package to install; "<package>=<version>" pins a version, otherwise the latest is installed
+_aws_jdk_package_name: "java-21-amazon-corretto-jdk"
+
+# Written to conf/security/java.security of every installed Corretto JDK
+_aws_jdk_security:
+  #
+  # The Java-level namelookup cache policy for successful lookups:
+  #
+  # any negative value: caching forever
+  # any positive value: the number of seconds to cache an address for
+  # zero: do not cache
+  #
+  # default value is forever (FOREVER). For security reasons, this
+  # caching is made forever when a security manager is set. When a security
+  # manager is not set, the default behavior in this implementation
+  # is to cache for 30 seconds.
+  #
+  # NOTE: setting this to anything other than the default value can have
+  #       serious security implications. Do not set it unless
+  #       you are sure you are not exposed to DNS spoofing attack.
+  #
+  dns_cache_ttl: 30
+  # The Java-level namelookup cache policy for failed lookups:
+  #
+  # any negative value: cache forever
+  # any positive value: the number of seconds to cache negative lookup results
+  # zero: do not cache
+  #
+  # In some Microsoft Windows networking environments that employ
+  # the WINS name service in addition to DNS, name service lookups
+  # that fail may take a noticeably long time to return (approx. 5 seconds).
+  # For this reason the default caching policy is to maintain these
+  # results for 10 seconds. CenterDevice does not cache failed lookups.
+  dns_cache_negative_ttl: 0

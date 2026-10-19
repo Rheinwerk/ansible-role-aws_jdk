@@ -1,0 +1,27 @@
+---
+# The DNS cache settings in java.security come from _aws_jdk_security (tests/vars.yml).
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Find the Corretto java.security file
+      ansible.builtin.find:
+        paths: /usr/lib/jvm
+        patterns: java.security
+        recurse: true
+      register: verify_security_files
+
+    - name: Read java.security
+      ansible.builtin.slurp:
+        src: "{{ (verify_security_files.files | map(attribute='path') | select('search', 'corretto') | first) }}"
+      register: verify_java_security
+
+    - name: The DNS cache settings are rendered from _aws_jdk_security
+      ansible.builtin.assert:
+        that:
+          - "'networkaddress.cache.ttl=31' in content"
+          - "'networkaddress.cache.negative.ttl=0' in content"
+        fail_msg: "{{ content | regex_findall('networkaddress.cache[a-z.]*=.*') }}"
+      vars:
+        content: "{{ verify_java_security.content | b64decode }}"

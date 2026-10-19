@@ -13,7 +13,16 @@ None.
 Role Variables
 --------------
 
-None.
+Every setting is one variable with a default in `defaults/main.yml`; set only the ones that differ.
+
+| Variable | Default |
+|---|---|
+| `_aws_jdk_deb822_repository` | the Corretto apt repository (`https://apt.corretto.aws`, suite `stable`) as a list of deb822 entries |
+| `_aws_jdk_package_name` | `java-21-amazon-corretto-jdk`; `<package>=<version>` pins a version, otherwise the latest is installed |
+| `_aws_jdk_security` | `dns_cache_ttl: 30`, `dns_cache_negative_ttl: 0`, written as `networkaddress.cache.ttl` and `networkaddress.cache.negative.ttl` to `java.security` of every installed Corretto JDK |
+
+Until v0.5.0 the role took one `_aws_jdk` dict with the keys `deb822_repository`, `package_name`
+and `security` instead.
 
 Dependencies
 -----------
@@ -23,11 +32,11 @@ None.
 Example Playbook
 ----------------
 
-The general contract of this role is to take the variables map `_aws_jdk` from `defaults/main.yml` as a template for your configuration and pass that configuration as a parameter to this role.
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Only the package differs from the defaults here:
 
     - hosts: servers
+      vars:
+        _aws_jdk_package_name: "java-17-amazon-corretto-jdk"
       roles:
          - { role: aws_jdk, tags: [ 'jdk' ] }
 
