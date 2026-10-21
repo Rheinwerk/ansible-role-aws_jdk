@@ -25,3 +25,33 @@
         fail_msg: "{{ content | regex_findall('networkaddress.cache[a-z.]*=.*') }}"
       vars:
         content: "{{ verify_java_security.content | b64decode }}"
+
+    - name: Find the Corretto JDK directories
+      ansible.builtin.find:
+        paths: /usr/lib/jvm
+        file_type: directory
+        patterns: '*corretto*'
+      register: verify_corretto_dirs
+
+    - name: Look up the distrusted aliases in cacerts
+      ansible.builtin.command:
+        argv:
+          - "{{ item.0.path }}/bin/keytool"
+          - -list
+          - -keystore
+          - "{{ item.0.path }}/lib/security/cacerts"
+          - -storepass
+          - changeit
+          - -alias
+          - "{{ item.1 }}"
+      loop: "{{ verify_corretto_dirs.files | product(['comodoaaaca [jdk]', 'emsigneccrootcag3 [jdk]', 'emsigneccrootca-g3']) | list }}"
+      register: verify_cacerts_lookup
+      changed_when: false
+      failed_when: false
+
+    - name: The distrusted aliases are gone from cacerts
+      ansible.builtin.assert:
+        that:
+          - verify_corretto_dirs.matched > 0
+          - verify_cacerts_lookup.results | selectattr('rc', 'equalto', 0) | list | length == 0
+        fail_msg: "{{ verify_cacerts_lookup.results | selectattr('rc', 'equalto', 0) | map(attribute='item') | list }}"

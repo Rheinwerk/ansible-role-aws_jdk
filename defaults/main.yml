@@ -44,3 +44,12 @@ _aws_jdk_security:
   # For this reason the default caching policy is to maintain these
   # results for 10 seconds. CenterDevice does not cache failed lookups.
   dns_cache_negative_ttl: 0
+
+# Aliases removed from lib/security/cacerts of every installed Corretto JDK. The defaults are the
+# roots that chain to the eMudhra intermediates with recoverable private keys (October 2026,
+# https://emudhra.we-have-a-problem.com/): AAA Certificate Services and emSign ECC Root CA - G3,
+# the latter once from OpenJDK and once from Corretto.
+_aws_jdk_cacerts_absent_aliases:
+  - "comodoaaaca [jdk]"
+  - "emsigneccrootcag3 [jdk]"
+  - "emsigneccrootca-g3"
