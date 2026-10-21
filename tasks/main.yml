@@ -47,3 +47,40 @@
     line: "networkaddress.cache.negative.ttl={{ _aws_jdk_security.dns_cache_negative_ttl }}"
   loop: "{{ corretto_dirs.files }}"
   when: corretto_dirs.matched > 0
+
+- name: Look up the distrusted aliases in cacerts
+  ansible.builtin.command:
+    argv:
+      - "{{ item.0.path }}/bin/keytool"
+      - -list
+      - -keystore
+      - "{{ item.0.path }}/lib/security/cacerts"
+      - -storepass
+      - changeit
+      - -alias
+      - "{{ item.1 }}"
+  loop: "{{ corretto_dirs.files | product(_aws_jdk_cacerts_absent_aliases) | list }}"
+  loop_control:
+    label: "{{ item.0.path }}: {{ item.1 }}"
+  register: aws_jdk_cacerts_lookup
+  changed_when: false
+  failed_when:
+    - aws_jdk_cacerts_lookup.rc != 0
+    - "'does not exist' not in aws_jdk_cacerts_lookup.stdout + aws_jdk_cacerts_lookup.stderr"
+
+- name: Delete the distrusted aliases from cacerts
+  ansible.builtin.command:
+    argv:
+      - "{{ item.item.0.path }}/bin/keytool"
+      - -delete
+      - -noprompt
+      - -keystore
+      - "{{ item.item.0.path }}/lib/security/cacerts"
+      - -storepass
+      - changeit
+      - -alias
+      - "{{ item.item.1 }}"
+  loop: "{{ aws_jdk_cacerts_lookup.results | selectattr('rc', 'equalto', 0) | list }}"
+  loop_control:
+    label: "{{ item.item.0.path }}: {{ item.item.1 }}"
+  changed_when: true
